@@ -1,0 +1,49 @@
+Daniil Monakhov
+ProcessLamportMutex
+#actions
+{1 SEND 2} 2, REQ, 1
+{2 SEND 1} 2, REQ, 1
+{2 SEND 1} 4, OK
+{1 SEND 2} 4, OK
+{1 SEND 2} 8, REQ, 7
+{2 SEND 1} 10, OK
+{2 SEND 1} 13, REQ, 12
+{1 SEND 2} 15, OK
+{1 SEND 2} 6, REL
+#process 1
+0 LockRequest
+40 {1 SEND 2} 2, REQ, 1
+80 {1 RCVD 2} 2, REQ, 1
+120 {1 SEND 2} 4, OK
+160 {1 RCVD 2} 4, OK
+200 Lock
+240 Unlock
+280 {1 SEND 2} 6, REL
+320 LockRequest
+360 {1 SEND 2} 8, REQ, 7
+480 {1 RCVD 2} 10, OK
+680 {1 RCVD 2} 13, REQ, 12
+720 {1 SEND 2} 15, OK
+760 Lock
+824 Unlock
+840 {1 SEND 2} 16, REL
+880 LockRequest
+920 {1 SEND 2} 18, REQ, 17
+#process 2
+0 LockRequest
+40 {2 SEND 1} 2, REQ, 1
+80 {2 RCVD 1} 2, REQ, 1
+120 {2 SEND 1} 4, OK
+160 {2 RCVD 1} 4, OK
+400 {2 RCVD 1} 8, REQ, 7
+440 {2 SEND 1} 10, OK
+480 Lock
+520 Unlock
+560 {2 SEND 1} 11, REL
+600 LockRequest
+640 {2 SEND 1} 13, REQ, 12
+760 {2 RCVD 1} 15, OK
+800 {2 RCVD 1} 6, REL
+813 Lock
+880 Unlock
+920 {2 SEND 1} 18, REL
